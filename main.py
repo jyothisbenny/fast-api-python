@@ -31,6 +31,7 @@ def read_posts(skip: int = 0, limit: int = 100, title: Optional[str] = None, con
         query = query.filter(models.Post.content == content)
     if title:
         query = query.filter(models.Post.title == title)
+    query = query.offset(skip).limit(limit)
     return query.all()
 
 
