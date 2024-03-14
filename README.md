@@ -4,3 +4,5 @@ pip install fastapi uvicorn[standard] sqlalchemy async-exit-stack async-generato
 
 
 pip install psycopg2-binary
+
+uvicorn main:app --reload

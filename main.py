@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from app import crud, models, schemas
 from app.models import SessionLocal, engine
+from typing import Optional
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -24,9 +25,13 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/posts/", response_model=List[schemas.Post])
-def read_posts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    posts = crud.get_posts(db, skip=skip, limit=limit)
-    return posts
+def read_posts(skip: int = 0, limit: int = 100, title: Optional[str] = None, content: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(models.Post)
+    if content:
+        query = query.filter(models.Post.content == content)
+    if title:
+        query = query.filter(models.Post.title == title)
+    return query.all()
 
 
 @app.get("/posts/{post_id}", response_model=schemas.Post)
